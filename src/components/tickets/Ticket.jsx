@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { getAllEmployees } from "../../services/employeeService.jsx"
 import { assignTicket, updateTicket } from "../../services/ticketService.jsx"
+import { deleteCustomerTicket } from "../../services/deleteCustomerTicket.jsx"
 
 export const Ticket = ({ticket, currentUser, getAndSetTickets}) => {
     const [employees, setEmployees] = useState([])
@@ -46,6 +47,12 @@ export const Ticket = ({ticket, currentUser, getAndSetTickets}) => {
         })
     }
 
+    const handleDelete = () => {
+        deleteCustomerTicket(ticket.id).then(() => {
+            getAndSetTickets()
+        })
+    }
+
     return (
         <section className="ticket" >
             <header className="ticket-info">#{ticket.id}</header>
@@ -70,6 +77,9 @@ export const Ticket = ({ticket, currentUser, getAndSetTickets}) => {
                     {assignedEmployee?.userId === currentUser.id && !ticket.dateCompleted ? (
                     <button className="btn btn-warning" onClick={handleClose}>Close</button> ): (
                     "")}
+
+                    {currentUser.isStaff === false && 
+                        <button className="btn btn-warning" onClick={handleDelete}>Delete</button>}
                 </div>
             </footer>
         </section>
